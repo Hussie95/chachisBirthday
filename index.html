@@ -1,75 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-		/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-		<title>Bestie's Birthday</title>
-		<link
-			href="https://fonts.googleapis.com/css?family=Poppins:300,400,700&display=swap"
-			rel="stylesheet"
-		/>
-		<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-		<style>
-			html,
-			body {
-				overflow-x: hidden;
-				position: relative;
-				width: 100%;
-				-webkit-overflow-scrolling: touch;
-				margin: 0;
-				padding: 0;
-				/* Prevent text scaling */
-				-webkit-text-size-adjust: 100%;
-			}
-			body {
-				font-family: "Poppins", sans-serif;
-				margin: 0;
-				padding: 0;
-				background-color: #ffd1dc;
-				color: #333;
-				text-align: center;
-				align-items: center;
-				position: relative;
-				max-width: 100vw;
-				overscroll-behavior-y: contain;
-			}
-			canvas {
-      			position: absolute;
-      			top: 0;
-      			left: 0;
-    		}
+    <title>Bestie's Birthday</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <style>
+      html,
+      body {
+        overflow-x: hidden;
+        position: relative;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+        margin: 0;
+        padding: 0;
+        /* Prevent text scaling */
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffd1dc;
+        color: #333;
+        text-align: center;
+        align-items: center;
+        position: relative;
+        max-width: 100vw;
+        overscroll-behavior-y: contain;
+      }
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
 
-			header {
-				background-color: #ff69b4;
-				padding: 20px;
-				color: white;
-			}
-			.pinterest-board {
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: center;
-				padding: 20px;
-			}
+      header {
+        background-color: #ff69b4;
+        padding: 20px;
+        color: white;
+      }
+      .pinterest-board {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+      }
 
-			.pinterest-board img {
-				width: 90%;
-				margin: 10px;
-				border-radius: 10px;
-				transition: transform 0.3s ease-in-out;
-			}
+      .pinterest-board img {
+        width: 90%;
+        margin: 10px;
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+      }
 
-			.pinterest-board img:hover {
-				transform: scale(1.05);
-			}
+      .pinterest-board img:hover {
+        transform: scale(1.05);
+      }
 
-			/*  .pinterest-board {
+      /*  .pinterest-board {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -88,1243 +88,1401 @@
             transform: scale(1.05);
         } */
 
-			#tbh-card,
-			.tbh-message {
-				display: none;
-				margin: 20px;
-				padding: 20px;
-				background-color: #fadadd;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-				border-radius: 10px;
-				transition: all 0.3s ease-in-out;
-			}
-
-			#tbh-button,
-			.tbh-envelope,
-			#save-button {
-				background-color: #ff69b4;
-				color: white;
-				padding: 10px 20px;
-				border: none;
-				border-radius: 10px;
-				cursor: pointer;
-				margin-bottom: 20px;
-				transition: background-color 0.3s ease;
-			}
-
-			#tbh-button:hover,
-			.tbh-envelope:hover,
-			#save-button:hover {
-				background-color: #ff2e97;
-			}
-
-			#wish-jar-container {
-				margin: 20px;
-				background-color: #fadadd;
-				padding: 20px;
-				border-radius: 10px;
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-			}
-
-			#wish-input {
-				width: 80%;
-				margin-bottom: 10px;
-				padding: 10px;
-				border-radius: 5px;
-				border: 1px solid #ff69b4;
-			}
-
-			.wish {
-				background-color: #fff;
-				padding: 10px;
-				margin: 10px 0;
-				border-radius: 10px;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-			}
-
-			.delete-button {
-				background-color: #ffbecd;
-				color: white;
-				border: none;
-				padding: 5px 10px;
-				border-radius: 5px;
-				cursor: pointer;
-			}
-
-			.delete-button:hover {
-				background-color: #ff69b4;
-			}
-
-			/* Timeline Styles */
-			.timeline {
-				position: relative;
-				margin: 50px auto;
-				padding: 40px 0;
-				background-color: #fff5f7;
-				width: 90%;
-				max-width: 900px;
-				border-radius: 26px;
-			}
-			.timeline h2 {
-				text-align: right;
-			}
-			.timeline::before {
-				content: "";
-				position: absolute;
-				width: 6px;
-				background-color: #ff69b4;
-				top: 0;
-				bottom: 0;
-				left: 50%;
-				transform: translateX(-50%);
-			}
-
-			.timeline-item {
-				position: relative;
-				width: 50%;
-				padding: 20px 40px;
-				box-sizing: border-box;
-				opacity: 0;
-				transform: translateY(50px);
-				transition: all 0.5s ease-in-out;
-				border-radius: 25px;
-			}
-
-			.timeline-item:nth-child(odd) {
-				left: 0;
-				transform: translateX(-50%);
-				text-align: right;
-			}
-
-			.timeline-item:nth-child(even) {
-				left: 50%;
-				transform: translateX(50%);
-				text-align: left;
-			}
-			/* Add blur to the message text, except for year 1 */
-			.timeline-item-content p {
-				filter: blur(5px);
-				transition: filter 0.3s ease;
-			}
-
-			.timeline-item-content.unlocked p {
-				filter: none;
-			}
-
-			/* Unlock button styles */
-			.unlock-button {
-				display: block;
-				margin: 20px auto;
-				padding: 10px 20px;
-				background-color: #ffa0d0;
-				color: white;
-				border: none;
-				border-radius: 10px;
-				cursor: pointer;
-			}
-
-			.unlock-button:hover {
-				background-color: #ff67b3;
-			}
-
-			.timeline-item-content h2 {
-				margin: 0;
-				color: #ff56aa;
-			}
-
-			.timeline-item-content p {
-				margin: 10px 0 0;
-				color: #666;
-			}
-
-			.timeline-item-content img {
-				width: 80px;
-				height: 80px;
-			}
-
-			.timeline-item::after {
-				content: "";
-				position: absolute;
-				top: 20px;
-				width: 20px;
-				height: 20px;
-				border-radius: 50%;
-				background-color: #ff69b4;
-				border: 4px solid #fff;
-				z-index: 1;
-			}
-
-			.timeline-item:nth-child(odd)::after {
-				right: -10px;
-			}
-
-			.timeline-item:nth-child(even)::after {
-				left: -10px;
-			}
-
-			.timeline-item.show {
-				opacity: 1;
-				transform: translateY(0);
-			}
-
-			/* Responsive Styles */
-			@media (max-width: 768px) {
-				.timeline-item {
-					width: 100%;
-					left: 0 !important;
-					transform: translateX(0) !important;
-					text-align: left !important;
-					padding-left: 50px;
-					padding-right: 25px;
-				}
-
-				.timeline-item:nth-child(odd)::after,
-				.timeline-item:nth-child(even)::after {
-					left: -10px !important;
-				}
-				/* Add this CSS */
-
-				.timeline-item.completed .timeline-item-content {
-					background-color: #eeb1d0; /* Change the background color to green */
-				}
-
-				.timeline::before {
-					left: 20px;
-					transform: none;
-				}
-			}
-			/* Make the timeline boxes rounded */
-			.timeline-item-content {
-				position: relative;
-				background-color: #fff;
-				padding: 20px;
-				border-radius: 10px;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-				max-height: 300px; /* Adjust as needed */
-				overflow-y: auto; /* Allow scrolling if content is long */
-				transition: all 0.3s ease;
-			}
-			.timeline-item-content img {
-				width: 80px;
-				height: 80px;
-			}
-			.scene {
-				position: relative;
-				width: 100%;
-				min-height: 100vh;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				padding: 20px;
-				box-sizing: border-box;
-				overflow: hidden;
-			}
-
-			.character-container {
-				width: 100%;
-				max-width: 500px;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				padding: 0 20px;
-				box-sizing: border-box;
-			
-			}
-
-			.try {
-				background-color: #f7fbde;
-				border-radius: 50%; /* Makes the background circular */
-				padding: 20px; /* Adds some space around the character */
-				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9); /* Optional: Adds a subtle shadow for depth */
-			}
-
-			.fox {
-				width: clamp(100px, 30vw, 150px);
-				align-items: center;
-				z-index: 2;
-				animation: bounce 0.9s infinite alternate;
-				filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-			}
-
-			.speech-bubble {
-				position: relative;
-				background: rgba(255, 255, 255, 0.95);
-				align-items: center;
-				border-radius: 12px;
-				padding: clamp(15px, 4vw, 25px);
-				border: 4px solid #ff7497;
-				font-size: clamp(14px, 4vw, 18px);
-				color: #333;
-				width: clamp(200px, 80vw, 400px);
-				margin-bottom: 20px;
-				z-index: 3;
-				opacity: 0;
-				transform: translateY(-20px);
-				transition: all 0.5s ease;
-				box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-				backdrop-filter: blur(5px);
-			}
-
-			.speech-bubble.visible {
-				opacity: 1;
-				transform: translateY(0);
-			}
-
-			.speech-bubble::after {
-				content: "";
-				position: absolute;
-				bottom: -15px;
-				left: 50%;
-				transform: translateX(-50%);
-				border-left: 12px solid transparent;
-				border-right: 12px solid transparent;
-				border-top: 15px solid #ffb3c6;
-			}
-
-			.next-button {
-				background: linear-gradient(45deg, #ff69b4, #ff1493);
-				color: white;
-				border: none;
-				padding: clamp(10px, 2.5vw, 18px) clamp(20px, 5vw, 35px);
-				border-radius: 30px;
-				font-size: clamp(14px, 4vw, 18px);
-				cursor: pointer;
-				z-index: 3;
-				transition: all 0.3s ease;
-				margin-top: 20px;
-				box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
-				text-transform: uppercase;
-				letter-spacing: 1px;
-				font-weight: bold;
-			}
-
-			.next-button:hover {
-				transform: scale(1.05) translateY(-2px);
-				box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
-				color: #ffb6c1;
-			}
-
-			.wish-text {
-				position: absolute;
-				background: rgba(255, 255, 255, 0.95);
-				padding: 12px 18px;
-				border-radius: 12px;
-				font-size: 14px;
-				white-space: nowrap;
-				pointer-events: none;
-				opacity: 0;
-				transition: all 0.4s ease;
-				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-				z-index: 1000;
-				top: -45px;
-				left: 50%;
-				transform: translateX(-50%) scale(0.9);
-				backdrop-filter: blur(5px);
-			}
-
-			@keyframes bounce {
-				0% {
-					transform: translateY(0);
-				}
-				100% {
-					transform: translateY(-12px);
-				}
-			}
-
-			@keyframes glow {
-				0% {
-					box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
-						0 0 20px rgba(255, 105, 180, 0.4);
-				}
-				100% {
-					box-shadow: 0 0 25px rgba(255, 255, 255, 0.9),
-						0 0 50px rgba(255, 105, 180, 0.7);
-				}
-			}
-
-			@keyframes wishAppear {
-				0% {
-					opacity: 0;
-					transform: scale(0) rotate(180deg);
-				}
-				100% {
-					opacity: 1;
-					transform: scale(1) rotate(0deg);
-				}
-			}
-
-			@keyframes messageAppear {
-				0% {
-					opacity: 0;
-					transform: translate(-50%, -30%);
-				}
-				100% {
-					opacity: 1;
-					transform: translate(-50%, -50%);
-				}
-			}
-
-			.background-1 {
-				background: radial-gradient(
-						circle at 30% 30%,
-						rgba(255, 182, 193, 0.6) 0%,
-						transparent 70%
-					),
-					radial-gradient(
-						circle at 70% 70%,
-						rgba(255, 105, 180, 0.6) 0%,
-						transparent 70%
-					),
-					linear-gradient(45deg, #ffb6c1, #ff69b4);
-				animation: gradient1 15s ease infinite;
-			}
-
-			.background-2 {
-				background: radial-gradient(
-						circle at 20% 50%,
-						rgba(255, 192, 203, 0.8) 0%,
-						transparent 50%
-					),
-					radial-gradient(
-						circle at 80% 50%,
-						rgba(255, 105, 180, 0.8) 0%,
-						transparent 50%
-					),
-					linear-gradient(135deg, #ff99cc, #ff66a3);
-				animation: gradient2 12s ease infinite;
-			}
-
-			.background-3 {
-				background: linear-gradient(
-							45deg,
-							rgba(255, 182, 193, 0.3) 25%,
-							transparent 25%
-						) -50px 0,
-					linear-gradient(-45deg, rgba(255, 182, 193, 0.3) 25%, transparent 25%) -50px
-						0,
-					radial-gradient(
-						circle at 50% 50%,
-						rgba(255, 105, 180, 0.5) 0%,
-						transparent 70%
-					),
-					linear-gradient(135deg, #ff99cc, #ff66a3);
-				background-size: 100px 100px, 100px 100px, 100% 100%, 100% 100%;
-				animation: gradient3 20s ease infinite;
-			}
-
-			@keyframes gradient1 {
-				0% {
-					background-position: 0% 50%, 100% 50%, 0% 0%;
-				}
-				50% {
-					background-position: 100% 50%, 0% 50%, 100% 100%;
-				}
-				100% {
-					background-position: 0% 50%, 100% 50%, 0% 0%;
-				}
-			}
-
-			@keyframes gradient2 {
-				0% {
-					background-position: 0% 0%, 100% 100%, 0% 0%;
-				}
-				50% {
-					background-position: 100% 100%, 0% 0%, 50% 50%;
-				}
-				100% {
-					background-position: 0% 0%, 100% 100%, 0% 0%;
-				}
-			}
-
-			@keyframes gradient3 {
-				0% {
-					background-position: -50px 0, -50px 0, 0% 0%, 0% 0%;
-				}
-				50% {
-					background-position: 50px 0, 50px 0, 100% 100%, 100% 100%;
-				}
-				100% {
-					background-position: -50px 0, -50px 0, 0% 0%, 0% 0%;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<header>
-			<h1>Happy Birthday Chachi <3</h1>
-		</header>
-
-		<div class="pinterest-board">
-			<h2>
-				Pinterest Board, PC - Willy (she just helped me find pics but anyway)
-			</h2>
-			<img src="WhatsApp Image 2024-01-06 at 11.42.28 PM.jpeg" alt="Image 4" />
-		</div>
-
-		<button id="tbh-button">Click for a tbh</button>
-
-		<div id="tbh-card">
-			<div id="tbh-messages">
-				<button class="tbh-envelope">Daud</button>
-				<p class="tbh-message">
-					chachi tbh is the best person in my life. i can trust her with
-					everything she’s the only person i talk to everyday and i love talking
-					to her. she’s so cute and beautiful but still she’s insecure sometimes
-					that’s the only bad thing about her baki she’s perfect and i love her
-				</p>
-
-				<button class="tbh-envelope">Husnain</button>
-				<p class="tbh-message">
-					chachi is my first and best friend on twitter, she's my closest friend
-					and no one understands me as well as she does, she knows everything
-					about me from the things that make me happy to the ones that make me
-					sad, she's the best person ever and i love her sm, she's always there
-					for everyone even when she's not doing well herself, she's the most
-					selfless person I know, she always goes above and beyond for her loved
-					ones and would do anything to make them happy and feel better at times
-					when they're not doing well, I trust her the most, she has the best
-					heart and she's an absolutely amazing person
-				</p>
-
-				<button class="tbh-envelope">Ahmed</button>
-				<p class="tbh-message">
-					chachi probably is one of the closest friends of mine, she's so rude
-					in gcs but she's so kind with me in dms, she always takes care of me
-					asks me if i'm okay, i love this about her, she's so humble and nice,
-					never thought i be praising her but i'm at gun point so
-				</p>
-
-				<button class="tbh-envelope">Fatima</button>
-				<p class="tbh-message">
-					Thank you for always being by side and tolerating me. I don't think i
-					deserve you, but thank you so much for being the best friend everyone
-					deserves. Thank you for always trying for me despite my shortcomings.
-				</p>
-
-				<button class="tbh-envelope">Willy</button>
-				<p class="tbh-message">
-					happy birthday my dearest soul sister!!! Nothing can replace the times
-					and memories we have built. our friendship is a treasure that i hold
-					dear and i am truly blessed to have you in my life. wish you all the
-					love, joy and success in life. ilysm chachi 🫂💕.
-				</p>
-			</div>
-		</div>
-
-		<div id="wish-jar-container">
-			<h2>Leave a Wish or a message (be nice) for chachi!!! (you better)</h2>
-			<textarea
-				id="wish-input"
-				placeholder="Write your wish here..."
-			></textarea>
-			<button id="save-button" onclick="saveWish()">Send Wish</button>
-			<div id="wishes">
-				<!-- Wishes will appear here -->
-			</div>
-		</div>
-		<div class="timeline">
-			<h2>You've got this!!!</h2>
-			<div class="timeline-item completed">
-				<!-- Year 1 -->
-				<div class="timeline-item-content year1">
-					<h2>Year 1</h2>
-					<img src="4852343.png" alt="Year 1 Done" />
-					<p>
-						Hiiii bestieee you've reached this far so congrats first of all. Now
-						I know this was probably something you were not expecting and is
-						most likely gonna be something that you won't be too happy about
-						since it's related to your uni and I know this degree is something
-						you never really wanted to do so you won't even feel like
-						celebrating anything after reaching a milestone but it's okay if you
-						don't, your bestie will for sure (meri duty hai 😤) okay jokes aside
-						I know it has been really hard for you, I know you've sacrificed a
-						lot, you've had to make tough decisions so that your siblings
-						wouldn't have to go through what you have and like I know you would
-						do anything but choose this degree, you're doing this just for your
-						parents, your dad especially but hey, did you think one year would
-						pass by this quick when you started? I don't think so, no one did,
-						even I didn't, yes, I can probably not even iamgine how hard this
-						year has been, you had so much to do, you had so much content to
-						cover of everything, be it anatomy, chem, Bulgarian, Latin
-						(medical), and other subs and then you have a place to take care of
-						too, and all this while being away from your home and family makes
-						it so much harder than it already is, it is a lot, I know you do
-						brush it off sometimes as a no biggie but it really is a big deal,
-						there's so many people out there who've been in similar situations
-						who've been depressed and have destroyed their mental health cause
-						of all this and I know you've had bad days too in between but one
-						thing I'm really glad about is that you didn't give up no matter
-						what, no matter how hard it felt like, you just continued and I'm
-						seriously so proud of you, words can't describe how much, you've
-						missed sm, You've missed being with your family on so many
-						occasions, and that's incredibly hard, I can't even imagine. But as
-						I always say, you're someone unlike anyone I've ever met. You're
-						special and there's something about you that's different from anyone
-						I've seen, it's the one thing that sets you apart from others like
-						seriously, even as a person you always say that I am the best person
-						when I believe it is you who actually is, you're literally perfect
-						and there's literally no flaws in you, not any I can think of or
-						see, you're the most caring, supportive, empathetic, kind, strongest
-						and the prettiest person I've ever met (khush ho jao compliments
-						hain,) you do sm for everyone, you're the most selfless person I
-						know, I could literally just keep on complimenting and writing about
-						how good of a person you are but let's get back to the point else I
-						would be running out of space (sorry) You've completed your 1st year
-						of meddd and this is huge like I'm literally so happy for you,
-						congratsssssss!!!, I'm so so so proud of you, no doubt it has been
-						hard, you've had your days, you had to pull all nighters but it's
-						done, it's over, no more 1st year, it's done and dusted, well I know
-						it has been over since a week or two now by the time you see this
-						but I wanted to wait till the 17th, which is basically your last
-						exam before you go home, I wanted that to end first and then
-						surprise you with this so sorry for making you wait 😓 but anyways,
-						you're done finallyyy with your 1st year Alhamdulilah, I'm sure your
-						parents are super proud of you, you should be proud of yourself too
-						like it really is a big deal, I know there's still a long way to go
-						and a lot to do and this not being something you want to do does
-						make it harder than it already is, but you've got this, In Sha Allah
-						it'll be over before you know it, trust me, my prayers are always
-						gonna be with you and I hope and pray you achieve everything you've
-						dreamed of. I'll always try to be there by your side and I hope you
-						know that I'm always here for you and you can literally share
-						anything and everything at anytime, you're not alone. May Allah
-						always keep you happy and may you get to do the things you've always
-						wanted to, Ameen. I hope you like this not so big, not so much, but
-						a little surprise from me, trust me you deserve way more than what
-						I'm ever able to do for you. Now finally you'll get a well deserved
-						break, make sure to make the most of it!!! I hope you have the best
-						summer of your life. Congratssss once again bestie 🥳🩶. Love youuu
-						🩶🩶
-					</p>
-					<button id="unlock-year1-button" class="unlock-button">Unlock</button>
-				</div>
-			</div>
-			<div class="timeline-item in-progress year2">
-				<!-- Year 2 -->
-				<div class="timeline-item-content">
-					<h2>Year 2</h2>
-					<img src="3196775.png" alt="Year 2" />
-					<p>
-						Keep up the great work. 2 years have passed and here you are. So
-						proud of you. Keep up the great work. 2 years have passed and here
-						you are. So proud of you. Keep up the great work. 2 years have
-						passed and here you are. So proud of you. Keep up the great work. 2
-						years have passed and here you are. So proud of you <3
-					</p>
-				</div>
-			</div>
-			<div class="timeline-item in-progress year3">
-				<!-- Year 3 -->
-				<div class="timeline-item-content">
-					<h2>Year 3</h2>
-					<img src="R (1).png" alt="Year 3" />
-					<p>
-						Just two more years to go. You've come so far, keep pushing! Just
-						two more years to go. You've come so far, keep pushing! Just two
-						more years to go. You've come so far, keep pushing!
-					</p>
-				</div>
-			</div>
-			<div class="timeline-item in-progress year4">
-				<!-- Year 4 -->
-				<div class="timeline-item-content">
-					<h2>Year 4</h2>
-					<img src="pink_don.jpg" alt="Graduation" />
-					<p>
-						It's your penultimate year! Can you believe it you're almost there
-						now? Look how far you have come (I know you've already started
-						planning your way out once you get the degree) Anyway, what's better
-						than Pink donuts for motivation? Pink donuts with sprinkles '-'
-					</p>
-				</div>
-			</div>
-			<div class="timeline-item in-progress year5">
-				<!-- Year 5 -->
-				<div class="timeline-item-content">
-					<h2>Year 5</h2>
-					<img src="grad.jpg" alt="Year 5" />
-					<p>
-						Congratulations on reaching your final year! You're almost there.
-						Soon we will be seeing Dr. Chachi!!! Congratulations on reaching
-						your final year! You're almost there. Soon we will be seeing Dr.
-						Chachi!!! Congratulations on reaching your final year! You're almost
-						there. Soon we will be seeing Dr. Chachi!!!
-					</p>
-				</div>
-			</div>
-		</div>
-		<div class="scene" id="story-scene">
-			<div id="background" class="background background-1"></div>
-			<div class="character-container">
-				<div class="speech-bubble" id="speech-bubble">
-					<p id="speech-text"></p>
-				</div>
-				<div class="try">
-					<img src="fox.png" alt="Fox Character" class="fox" />
-				</div>
-			</div>
-			<button class="next-button" id="next-button">Next</button>
-		</div>
-
-		<script>
-			document
-				.getElementById("tbh-button")
-				.addEventListener("click", function () {
-					var tbhCard = document.getElementById("tbh-card");
-					tbhCard.style.display =
-						tbhCard.style.display === "none" || tbhCard.style.display === ""
-							? "block"
-							: "none";
-				});
-
-			var envelopes = document.getElementsByClassName("tbh-envelope");
-			for (var i = 0; i < envelopes.length; i++) {
-				envelopes[i].addEventListener("click", function () {
-					var message = this.nextElementSibling;
-					message.style.display =
-						message.style.display === "none" || message.style.display === ""
-							? "block"
-							: "none";
-				});
-			}
-
-			// Virtual Wish Jar
-			document.addEventListener("DOMContentLoaded", loadWishes);
-
-			function saveWish() {
-				var wishInput = document.getElementById("wish-input");
-				database.ref("wishes/").push({
-					wish: wishInput.value,
-				});
-				wishInput.value = "";
-			}
-
-			// Initialize Firebase
-			var firebaseConfig = {
-				apiKey: "AIzaSyDRa8poszFaaBj2oxNxfj5uUc2e7xgluJw",
-				authDomain: "birthday-73b01.firebaseapp.com",
-				databaseURL: "https://birthday-73b01-default-rtdb.firebaseio.com",
-				projectId: "birthday-73b01",
-				storageBucket: "birthday-73b01.appspot.com",
-				messagingSenderId: "382163658307",
-				appId: "1:382163658307:web:a9f1da69e7173be95c96f6",
-				measurementId: "G-W6TWMDSCML",
-			};
-			firebase.initializeApp(firebaseConfig);
-
-			var database = firebase.database();
-			var auth = firebase.auth();
-
-			// Sign in anonymously
-			auth.signInAnonymously().catch(function (error) {
-				console.error("Anonymous sign-in error", error);
-			});
-
-			// Save wish to Firebase
-			function saveWish() {
-				var wishInput = document.getElementById("wish-input");
-				database.ref("wishes/").push({
-					wish: wishInput.value,
-				});
-				wishInput.value = "";
-			}
-
-			function appendWish(wish, key) {
-				var wishesDiv = document.getElementById("wishes");
-				var wishDiv = document.createElement("div");
-				wishDiv.classList.add("wish");
-				wishDiv.textContent = wish;
-
-				var deleteButton = document.createElement("button");
-				deleteButton.classList.add("delete-button");
-				deleteButton.textContent = "Delete";
-				deleteButton.onclick = function () {
-					deleteWish(key);
-				};
-
-				wishDiv.appendChild(deleteButton);
-				wishesDiv.appendChild(wishDiv);
-			}
-
-			function deleteWish(key) {
-				var secretCode = "duffer";
-				var userCode = prompt(
-					"Only chachi has access you can't delete now lol:"
-				);
-
-				if (userCode === secretCode) {
-					database
-						.ref("wishes/" + key)
-						.remove()
-						.then(function () {
-							console.log("Wish successfully deleted");
-						})
-						.catch(function (error) {
-							console.log(
-								"Ae shurli de kam check karo, too late now you can't delete ",
-								error
-							);
-						});
-				} else {
-					alert("Ae shurli de kam check karo, too late now you can't delete.");
-				}
-			}
-
-			function loadWishes() {
-				var wishesDiv = document.getElementById("wishes");
-				database.ref("wishes/").on("value", function (snapshot) {
-					wishesDiv.innerHTML = ""; // Clear existing wishes
-					snapshot.forEach(function (childSnapshot) {
-						var wish = childSnapshot.val().wish;
-						var key = childSnapshot.key;
-						appendWish(wish, key);
-					});
-				});
-			}
-
-			document.addEventListener("DOMContentLoaded", function () {
-				var items = document.querySelectorAll(".timeline-item");
-
-				var observer = new IntersectionObserver(
-					function (entries) {
-						entries.forEach(function (entry) {
-							if (entry.isIntersecting) {
-								entry.target.classList.add("show");
-								if (entry.target.classList.contains("completed")) {
-									entry.target.querySelector(
-										".timeline-item-content"
-									).style.backgroundColor = "#FFD1DC";
-								}
-								observer.unobserve(entry.target);
-							}
-						});
-					},
-					{ threshold: 0.9 }
-				);
-
-				items.forEach(function (item) {
-					observer.observe(item);
-				});
-			});
-
-			function unlockYear1() {
-				var secretCode = "Neend"; // Replace with your actual code
-				var userCode = prompt("Enter the code:");
-
-				if (userCode === secretCode) {
-					var year1Content = document.querySelector(
-						".timeline-item-content.year1"
-					);
-					year1Content.classList.add("unlocked");
-					document.getElementById("unlock-year1-button").style.display = "none";
-				} else {
-					alert("Please try again.");
-				}
-			}
-
-			document.addEventListener("DOMContentLoaded", function () {
-				var unlockButton = document.getElementById("unlock-year1-button");
-				if (unlockButton) {
-					unlockButton.addEventListener("click", unlockYear1);
-				}
-
-				var items = document.querySelectorAll(".timeline-item");
-
-				var observer = new IntersectionObserver(
-					function (entries) {
-						entries.forEach(function (entry) {
-							if (entry.isIntersecting) {
-								entry.target.classList.add("show");
-								if (entry.target.classList.contains("completed")) {
-									entry.target.querySelector(
-										".timeline-item-content"
-									).style.backgroundColor = "#FFD1DC";
-								}
-								observer.unobserve(entry.target);
-							}
-						});
-					},
-					{ threshold: 0.9 }
-				);
-
-				items.forEach(function (item) {
-					observer.observe(item);
-				});
-			});
-		</script>
-
-		<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-		<script>
-			window.onload = function () {
-				var duration = 5 * 900;
-				var end = Date.now() + duration;
-
-				(function frame() {
-					confetti({
-						particleCount: 7,
-						angle: 60,
-						spread: 55,
-						origin: { x: 0 },
-					});
-					confetti({
-						particleCount: 7,
-						angle: 120,
-						spread: 55,
-						origin: { x: 1 },
-					});
-
-					if (Date.now() < end) {
-						requestAnimationFrame(frame);
-					}
-				})();
-			};
-		</script>
-
-		<script>
-			var firebaseConfig = {
-				databaseURL: "https://birthday-73b01-default-rtdb.firebaseio.com/",
-			};
-			firebase.initializeApp(firebaseConfig);
-			var database = firebase.database();
-		</script>
-		<script>
-			const scenes = [
-				{
-					text: "Oh hey there 👋🏻 you made it here!",
-					background: "background-1",
-				},
-				{
-					text: "HAPPY BIRTHDAY!!!!!!!!",
-					background: "background-2",
-				},
-				{
-					text: "HAPPY",
-					background: "background-3",
-				},
-				{
-					text: "BIRTHDAY!!!",
-					background: "background-3",
-				},
-
-				{
-					text: "🥳🥳🥳",
-					background: "background-2",
-				},
-				{
-					text: "YOUR BESTIE TOLD ME",
-					background: "background-2",
-				},
-				{
-					text: "YOU TURNED 21 TODAY.",
-					background: "background-2",
-				},
-				{
-					text: "WOAHHHHHH",
-					background: "background-3",
-				},
-
-				{
-					text: "I AM SO HAPPY FOR YOU",
-					background: "background-3",
-				},
-
-				{
-					text: "Well you might be thinking that we don't even know each other",
-					background: "background-2",
-				},
-				{
-					text: "And that's true 😔",
-					background: "background-1",
-				},
-				{
-					text: "But that does not mean that I CANT WISH YOU!!",
-					background: "background-2",
-				},
-				{
-					text: "In fact that's exactly why I am here 😔",
-					background: "background-3",
-				},
-
-				{
-					text: "Your friend put me here to wish you!",
-					background: "background-3",
-				},
-				{
-					text: "I told him to place me on top of the website",
-					background: "background-1",
-				},
-				{
-					text: "He instead",
-					background: "background-2",
-				},
-				{
-					text: "Trapped me inside this circle and I am just bouncing now",
-					background: "background-3",
-				},
-				{
-					text: "THAT TOO AT THE BOTTOM",
-					background: "background-3",
-				},
-				{
-					text: "AT THE VERY END",
-					background: "background-3",
-				},
-				{
-					text: "Idiot",
-					background: "background-3",
-				},
-				{
-					text: "Trust me it sucks in here",
-					background: "background-1",
-				},
-				{
-					text: "The happy smile that you see is fake.",
-					background: "background-2",
-				},
-				{
-					text: "ANYWAY",
-					background: "background-3",
-				},
-				{
-					text: "I won't waste much of your time",
-					background: "background-1",
-				},
-				{
-					text: "I have a few messages your friend wanted me to share with you!!!",
-					background: "background-2",
-				},
-				{
-					text: "1: Never forget how many people’s lives you’ve touched. You’re a gift to everyone who knows you, and today, we’re celebrating YOU, Happy Birthday Bestie!",
-					background: "background-3",
-				},
-				{
-					text: "2: On your birthday, I just want you to know. You’re loved, you’re appreciated, and you make everything so much better just by being there.",
-					background: "background-3",
-				},
-				{
-					text: "3: You’re not just another year older—you’re another year better, cooler, stronger, and even more amazing (if that’s even possible).",
-					background: "background-3",
-				},
-				{
-					text: "4: Your friendship means the world to me. I hope this birthday is as memorable as the countless amazing memories we’ve shared together in the past two years.",
-					background: "background-3",
-				},
-				{
-					text: "5: If friendship were a gift, you’d be the most precious one of all. I’m so grateful for you and for everything that you've done for me.",
-					background: "background-3",
-				},
-				{
-					text: "6: You deserve the best, not just today, but every single day. Cause someone as amazing as you deserves nothing less.",
-					background: "background-3",
-				},
-				{
-					text: "7: You’re a gift to everyone who knows you. You're a blessing. Thank you for being a constant source of support, strength, and inspiration, and for always being there for me, no matter what.",
-					background: "background-3",
-				},
-				{
-					text: "8: Thank you for being you. Thank you for your love, your care, and your endless support.",
-					background: "background-3",
-				},
-				{
-					text: "9: If I could gift you something, it would be the ability to see yourself through my eyes, cause then you’d know how truly special and amazing you are.",
-					background: "background-3",
-				},
-
-				{
-					text: "10: In these 2 years of our friendship, your presence has always been like Apricity - The warmth of the sun in winter. You've always been there for me with kind words no matter what. You've brought light, comfort, and, a sense of peace especially during the most challenging moments.",
-					background: "background-3",
-				},
-				{
-					text: "Happy Birthday Bestie!. I hope this year brings you endless love, happiness, and everything that you’ve been praying for. Love you 🤍🤍🤍"
-
-				},
-
-				{
-					text: "I hope you liked it!!! but wait",
-					background: "background-3",
-				},
-				{
-					text: "That's not it",
-					background: "background-3",
-				},
-				{
-					text: "My friend molang will share the rest of your gift!!!",
-					background: "background-3",
-				},
-				{
-					text: "And i can't wait for you to see it!",
-					background: "background-3",
-				},
-				{
-					text: "Just click on next and I'll take you there!",
-					background: "background-3",
-				},
-				{
-					text: "Oh and HAPPY BIRTHDAY!",
-					background: "background-3",
-				},
-			];
-			const speechBubble = document.getElementById("speech-bubble");
-			const speechText = document.getElementById("speech-text");
-			const nextButton = document.getElementById("next-button");
-			const storyScene = document.getElementById("story-scene");
-			const wishingTree = document.getElementById("wishing-tree");
-			const finalMessage = document.getElementById("final-message");
-			const background = document.getElementById("background");
-
-			let currentScene = 0;
-			let isTyping = false;
-
-			function typeText(text) {
-				return new Promise((resolve) => {
-					let index = 0;
-					isTyping = true;
-					speechText.textContent = "";
-
-					function type() {
-						if (index < text.length) {
-							speechText.textContent += text[index];
-							index++;
-							setTimeout(type, 73);
-						} else {
-							isTyping = false;
-							resolve();
-						}
-					}
-
-					type();
-				});
-			}
-
-			async function nextScene() {
-				if (isTyping) return;
-
-				if (currentScene < scenes.length - 1) {
-					speechBubble.classList.remove("visible");
-					await new Promise((resolve) => setTimeout(resolve, 500));
-
-					background.className = `background ${scenes[currentScene].background}`;
-					speechBubble.classList.add("visible");
-					await typeText(scenes[currentScene].text);
-
-					currentScene++;
-				} else if (currentScene === scenes.length - 1) {
-					speechBubble.classList.remove("visible");
-					await new Promise((resolve) => setTimeout(resolve, 500));
-
-					background.className = `background ${scenes[currentScene].background}`;
-					speechBubble.classList.add("visible");
-					await typeText(scenes[currentScene].text);
-
-					await new Promise((resolve) => setTimeout(resolve, 1500));
-
-					window.location.href = "https://molang-bday-wish.vercel.app";
-
-					currentScene++;
-				}
-			}
-
-			nextButton.addEventListener("click", nextScene);
-
-			window.onload = () => {
-				speechBubble.classList.add("visible");
-				nextScene();
-			};
-		</script>
-		  <canvas id="confettiCanvas"></canvas>
-  
-		  <canvas id="confettiCanvas"></canvas>
-  
-		  <script>
-			const canvas = document.getElementById('confettiCanvas');
-			const ctx = canvas.getContext('2d');
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-		
-			const confetti = [];
-			const confettiColors = ['#FFC0CB', '#FF69B4', '#FFB6C1', '#FF1493', '#DB7093']; // Shades of pink
-		
-			const confettiDuration = 5000; // Confetti duration in milliseconds
-			const fadeOutDuration = 2000; // Fade-out duration in milliseconds
-			let animationStartTime = null;
-		
-			// Create confetti pieces
-			for (let i = 0; i < 150; i++) {
-			  confetti.push({
-				x: Math.random() * canvas.width,
-				y: Math.random() * canvas.height,
-				size: Math.random() * 10 + 5,
-				color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
-				speedX: Math.random() * 2 - 1,
-				speedY: Math.random() * 3 + 1,
-				rotation: Math.random() * 360,
-				rotationSpeed: Math.random() * 5,
-				opacity: 1,
-			  });
-			}
-		
-			// Draw and update confetti
-			function drawConfetti(timestamp) {
-			  if (!animationStartTime) animationStartTime = timestamp;
-			  const elapsedTime = timestamp - animationStartTime;
-		
-			  ctx.clearRect(0, 0, canvas.width, canvas.height);
-		
-			  confetti.forEach((piece) => {
-				ctx.save();
-				ctx.translate(piece.x, piece.y);
-				ctx.rotate((piece.rotation * Math.PI) / 180);
-				ctx.fillStyle = `rgba(${hexToRgb(piece.color)}, ${piece.opacity})`;
-				ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size);
-				ctx.restore();
-		
-				piece.x += piece.speedX;
-				piece.y += piece.speedY;
-				piece.rotation += piece.rotationSpeed;
-		
-				// Reduce opacity for fade-out effect
-				if (elapsedTime > confettiDuration) {
-				  piece.opacity -= 1 / (fadeOutDuration / 16); // Assuming 60 fps
-				  if (piece.opacity < 0) piece.opacity = 0;
-				}
-		
-				// Reset confetti position if it goes off-screen
-				if (piece.y > canvas.height) {
-				  piece.y = -piece.size;
-				  piece.x = Math.random() * canvas.width;
-				}
-			  });
-		
-			  // Stop animation after fade-out duration
-			  if (elapsedTime < confettiDuration + fadeOutDuration) {
-				requestAnimationFrame(drawConfetti);
-			  } else {
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-			  }
-			}
-		
-			// Utility function to convert hex color to RGB
-			function hexToRgb(hex) {
-			  const bigint = parseInt(hex.slice(1), 16);
-			  const r = (bigint >> 16) & 255;
-			  const g = (bigint >> 8) & 255;
-			  const b = bigint & 255;
-			  return `${r}, ${g}, ${b}`;
-			}
-		
-			// Start animation
-			requestAnimationFrame(drawConfetti);
-		
-			// Adjust canvas size on window resize
-			window.addEventListener('resize', () => {
-			  canvas.width = window.innerWidth;
-			  canvas.height = window.innerHeight;
-			});
-		  </script>
-	</body>
+      #tbh-card,
+      .tbh-message {
+        display: none;
+        margin: 20px;
+        padding: 20px;
+        background-color: #fadadd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      #tbh-button,
+      .tbh-envelope,
+      #save-button {
+        background-color: #ff69b4;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      #tbh-button:hover,
+      .tbh-envelope:hover,
+      #save-button:hover {
+        background-color: #ff2e97;
+      }
+
+      #wish-jar-container {
+        margin: 20px;
+        background-color: #fadadd;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      #wish-input {
+        width: 80%;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ff69b4;
+      }
+
+      .wish {
+        background-color: #fff;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .delete-button {
+        background-color: #ffbecd;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .delete-button:hover {
+        background-color: #ff69b4;
+      }
+
+      /* Timeline Styles */
+      .timeline {
+        position: relative;
+        margin: 50px auto;
+        padding: 40px 0;
+        background-color: #fff5f7;
+        width: 90%;
+        max-width: 900px;
+        border-radius: 26px;
+      }
+      .timeline h2 {
+        text-align: right;
+      }
+      .timeline::before {
+        content: '';
+        position: absolute;
+        width: 6px;
+        background-color: #ff69b4;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .timeline-item {
+        position: relative;
+        width: 50%;
+        padding: 20px 40px;
+        box-sizing: border-box;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.5s ease-in-out;
+        border-radius: 25px;
+      }
+
+      .timeline-item:nth-child(odd) {
+        left: 0;
+        transform: translateX(-50%);
+        text-align: right;
+      }
+
+      .timeline-item:nth-child(even) {
+        left: 50%;
+        transform: translateX(50%);
+        text-align: left;
+      }
+      /* Add blur to the message text, except for year 1 */
+      .timeline-item-content p {
+        filter: blur(5px);
+        transition: filter 0.3s ease;
+      }
+
+      .timeline-item-content.unlocked p {
+        filter: none;
+      }
+
+      /* Unlock button styles */
+      .unlock-button {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #ffa0d0;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      .unlock-button:hover {
+        background-color: #ff67b3;
+      }
+
+      .timeline-item-content h2 {
+        margin: 0;
+        color: #ff56aa;
+      }
+
+      .timeline-item-content p {
+        margin: 10px 0 0;
+        color: #666;
+      }
+
+      .timeline-item-content img {
+        width: 80px;
+        height: 80px;
+      }
+
+      .timeline-item::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #ff69b4;
+        border: 4px solid #fff;
+        z-index: 1;
+      }
+
+      .timeline-item:nth-child(odd)::after {
+        right: -10px;
+      }
+
+      .timeline-item:nth-child(even)::after {
+        left: -10px;
+      }
+
+      .timeline-item.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        .timeline-item {
+          width: 100%;
+          left: 0 !important;
+          transform: translateX(0) !important;
+          text-align: left !important;
+          padding-left: 50px;
+          padding-right: 25px;
+        }
+
+        .timeline-item:nth-child(odd)::after,
+        .timeline-item:nth-child(even)::after {
+          left: -10px !important;
+        }
+        /* Add this CSS */
+
+        .timeline-item.completed .timeline-item-content {
+          background-color: #eeb1d0; /* Change the background color to green */
+        }
+
+        .timeline::before {
+          left: 20px;
+          transform: none;
+        }
+      }
+      /* Make the timeline boxes rounded */
+      .timeline-item-content {
+        position: relative;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-height: 300px; /* Adjust as needed */
+        overflow-y: auto; /* Allow scrolling if content is long */
+        transition: all 0.3s ease;
+      }
+      .timeline-item-content img {
+        width: 80px;
+        height: 80px;
+      }
+      .scene {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .character-container {
+        width: 100%;
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 20px;
+        box-sizing: border-box;
+      }
+
+      .try {
+        background-color: #f7fbde;
+        border-radius: 50%; /* Makes the background circular */
+        padding: 20px; /* Adds some space around the character */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9); /* Optional: Adds a subtle shadow for depth */
+      }
+
+      .fox {
+        width: clamp(100px, 30vw, 150px);
+        align-items: center;
+        z-index: 2;
+        animation: bounce 0.9s infinite alternate;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+      }
+
+      .speech-bubble {
+        position: relative;
+        background: rgba(255, 255, 255, 0.95);
+        align-items: center;
+        border-radius: 12px;
+        padding: clamp(15px, 4vw, 25px);
+        border: 4px solid #ff7497;
+        font-size: clamp(14px, 4vw, 18px);
+        color: #333;
+        width: clamp(200px, 80vw, 400px);
+        margin-bottom: 20px;
+        z-index: 3;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.5s ease;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+      }
+
+      .speech-bubble.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .speech-bubble::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-top: 15px solid #ffb3c6;
+      }
+
+      .next-button {
+        background: linear-gradient(45deg, #ff69b4, #ff1493);
+        color: white;
+        border: none;
+        padding: clamp(10px, 2.5vw, 18px) clamp(20px, 5vw, 35px);
+        border-radius: 30px;
+        font-size: clamp(14px, 4vw, 18px);
+        cursor: pointer;
+        z-index: 3;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: bold;
+      }
+
+      .next-button:hover {
+        transform: scale(1.05) translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+        color: #ffb6c1;
+      }
+
+      .wish-text {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-size: 14px;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition: all 0.4s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.9);
+        backdrop-filter: blur(5px);
+      }
+
+      @keyframes bounce {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-12px);
+        }
+      }
+
+      @keyframes glow {
+        0% {
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+            0 0 20px rgba(255, 105, 180, 0.4);
+        }
+        100% {
+          box-shadow: 0 0 25px rgba(255, 255, 255, 0.9),
+            0 0 50px rgba(255, 105, 180, 0.7);
+        }
+      }
+
+      @keyframes wishAppear {
+        0% {
+          opacity: 0;
+          transform: scale(0) rotate(180deg);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
+      }
+
+      @keyframes messageAppear {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -30%);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      .background-1 {
+        background: radial-gradient(
+            circle at 30% 30%,
+            rgba(255, 182, 193, 0.6) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            circle at 70% 70%,
+            rgba(255, 105, 180, 0.6) 0%,
+            transparent 70%
+          ),
+          linear-gradient(45deg, #ffb6c1, #ff69b4);
+        animation: gradient1 15s ease infinite;
+      }
+
+      .background-2 {
+        background: radial-gradient(
+            circle at 20% 50%,
+            rgba(255, 192, 203, 0.8) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 50%,
+            rgba(255, 105, 180, 0.8) 0%,
+            transparent 50%
+          ),
+          linear-gradient(135deg, #ff99cc, #ff66a3);
+        animation: gradient2 12s ease infinite;
+      }
+
+      .background-3 {
+        background: linear-gradient(
+              45deg,
+              rgba(255, 182, 193, 0.3) 25%,
+              transparent 25%
+            ) -50px 0,
+          linear-gradient(-45deg, rgba(255, 182, 193, 0.3) 25%, transparent 25%) -50px
+            0,
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 105, 180, 0.5) 0%,
+            transparent 70%
+          ),
+          linear-gradient(135deg, #ff99cc, #ff66a3);
+        background-size: 100px 100px, 100px 100px, 100% 100%, 100% 100%;
+        animation: gradient3 20s ease infinite;
+      }
+
+      @keyframes gradient1 {
+        0% {
+          background-position: 0% 50%, 100% 50%, 0% 0%;
+        }
+        50% {
+          background-position: 100% 50%, 0% 50%, 100% 100%;
+        }
+        100% {
+          background-position: 0% 50%, 100% 50%, 0% 0%;
+        }
+      }
+
+      @keyframes gradient2 {
+        0% {
+          background-position: 0% 0%, 100% 100%, 0% 0%;
+        }
+        50% {
+          background-position: 100% 100%, 0% 0%, 50% 50%;
+        }
+        100% {
+          background-position: 0% 0%, 100% 100%, 0% 0%;
+        }
+      }
+
+      @keyframes gradient3 {
+        0% {
+          background-position: -50px 0, -50px 0, 0% 0%, 0% 0%;
+        }
+        50% {
+          background-position: 50px 0, 50px 0, 100% 100%, 100% 100%;
+        }
+        100% {
+          background-position: -50px 0, -50px 0, 0% 0%, 0% 0%;
+        }
+      }
+
+      .timeline-item-content p {
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Happy Birthday Chachi <3</h1>
+    </header>
+
+    <div class="pinterest-board">
+      <h2>
+        Pinterest Board, PC - Willy (she just helped me find pics but anyway)
+      </h2>
+      <img src="WhatsApp Image 2024-01-06 at 11.42.28 PM.jpeg" alt="Image 4" />
+    </div>
+
+    <button id="tbh-button">Click for a tbh</button>
+
+    <div id="tbh-card">
+      <div id="tbh-messages">
+        <button class="tbh-envelope">Daud</button>
+        <p class="tbh-message">
+          chachi tbh is the best person in my life. i can trust her with
+          everything she’s the only person i talk to everyday and i love talking
+          to her. she’s so cute and beautiful but still she’s insecure sometimes
+          that’s the only bad thing about her baki she’s perfect and i love her
+        </p>
+
+        <button class="tbh-envelope">Husnain</button>
+        <p class="tbh-message">
+          chachi is my first and best friend on twitter, she's my closest friend
+          and no one understands me as well as she does, she knows everything
+          about me from the things that make me happy to the ones that make me
+          sad, she's the best person ever and i love her sm, she's always there
+          for everyone even when she's not doing well herself, she's the most
+          selfless person I know, she always goes above and beyond for her loved
+          ones and would do anything to make them happy and feel better at times
+          when they're not doing well, I trust her the most, she has the best
+          heart and she's an absolutely amazing person
+        </p>
+
+        <button class="tbh-envelope">Ahmed</button>
+        <p class="tbh-message">
+          chachi probably is one of the closest friends of mine, she's so rude
+          in gcs but she's so kind with me in dms, she always takes care of me
+          asks me if i'm okay, i love this about her, she's so humble and nice,
+          never thought i be praising her but i'm at gun point so
+        </p>
+
+        <button class="tbh-envelope">Fatima</button>
+        <p class="tbh-message">
+          Thank you for always being by side and tolerating me. I don't think i
+          deserve you, but thank you so much for being the best friend everyone
+          deserves. Thank you for always trying for me despite my shortcomings.
+        </p>
+
+        <button class="tbh-envelope">Willy</button>
+        <p class="tbh-message">
+          happy birthday my dearest soul sister!!! Nothing can replace the times
+          and memories we have built. our friendship is a treasure that i hold
+          dear and i am truly blessed to have you in my life. wish you all the
+          love, joy and success in life. ilysm chachi 🫂💕.
+        </p>
+      </div>
+    </div>
+
+    <div id="wish-jar-container">
+      <h2>Leave a Wish or a message (be nice) for chachi!!! (you better)</h2>
+      <textarea
+        id="wish-input"
+        placeholder="Write your wish here..."
+      ></textarea>
+      <button id="save-button" onclick="saveWish()">Send Wish</button>
+      <div id="wishes">
+        <!-- Wishes will appear here -->
+      </div>
+    </div>
+    <div class="timeline">
+      <h2>You've got this!!!</h2>
+      <div class="timeline-item completed">
+        <!-- Year 1 -->
+        <div class="timeline-item-content year1">
+          <h2>Year 1</h2>
+          <img src="4852343.png" alt="Year 1 Done" />
+          <p>
+            Hiiii bestieee you've reached this far so congrats first of all. Now
+            I know this was probably something you were not expecting and is
+            most likely gonna be something that you won't be too happy about
+            since it's related to your uni and I know this degree is something
+            you never really wanted to do so you won't even feel like
+            celebrating anything after reaching a milestone but it's okay if you
+            don't, your bestie will for sure (meri duty hai 😤) okay jokes aside
+            I know it has been really hard for you, I know you've sacrificed a
+            lot, you've had to make tough decisions so that your siblings
+            wouldn't have to go through what you have and like I know you would
+            do anything but choose this degree, you're doing this just for your
+            parents, your dad especially but hey, did you think one year would
+            pass by this quick when you started? I don't think so, no one did,
+            even I didn't, yes, I can probably not even iamgine how hard this
+            year has been, you had so much to do, you had so much content to
+            cover of everything, be it anatomy, chem, Bulgarian, Latin
+            (medical), and other subs and then you have a place to take care of
+            too, and all this while being away from your home and family makes
+            it so much harder than it already is, it is a lot, I know you do
+            brush it off sometimes as a no biggie but it really is a big deal,
+            there's so many people out there who've been in similar situations
+            who've been depressed and have destroyed their mental health cause
+            of all this and I know you've had bad days too in between but one
+            thing I'm really glad about is that you didn't give up no matter
+            what, no matter how hard it felt like, you just continued and I'm
+            seriously so proud of you, words can't describe how much, you've
+            missed sm, You've missed being with your family on so many
+            occasions, and that's incredibly hard, I can't even imagine. But as
+            I always say, you're someone unlike anyone I've ever met. You're
+            special and there's something about you that's different from anyone
+            I've seen, it's the one thing that sets you apart from others like
+            seriously, even as a person you always say that I am the best person
+            when I believe it is you who actually is, you're literally perfect
+            and there's literally no flaws in you, not any I can think of or
+            see, you're the most caring, supportive, empathetic, kind, strongest
+            and the prettiest person I've ever met (khush ho jao compliments
+            hain,) you do sm for everyone, you're the most selfless person I
+            know, I could literally just keep on complimenting and writing about
+            how good of a person you are but let's get back to the point else I
+            would be running out of space (sorry) You've completed your 1st year
+            of meddd and this is huge like I'm literally so happy for you,
+            congratsssssss!!!, I'm so so so proud of you, no doubt it has been
+            hard, you've had your days, you had to pull all nighters but it's
+            done, it's over, no more 1st year, it's done and dusted, well I know
+            it has been over since a week or two now by the time you see this
+            but I wanted to wait till the 17th, which is basically your last
+            exam before you go home, I wanted that to end first and then
+            surprise you with this so sorry for making you wait 😓 but anyways,
+            you're done finallyyy with your 1st year Alhamdulilah, I'm sure your
+            parents are super proud of you, you should be proud of yourself too
+            like it really is a big deal, I know there's still a long way to go
+            and a lot to do and this not being something you want to do does
+            make it harder than it already is, but you've got this, In Sha Allah
+            it'll be over before you know it, trust me, my prayers are always
+            gonna be with you and I hope and pray you achieve everything you've
+            dreamed of. I'll always try to be there by your side and I hope you
+            know that I'm always here for you and you can literally share
+            anything and everything at anytime, you're not alone. May Allah
+            always keep you happy and may you get to do the things you've always
+            wanted to, Ameen. I hope you like this not so big, not so much, but
+            a little surprise from me, trust me you deserve way more than what
+            I'm ever able to do for you. Now finally you'll get a well deserved
+            break, make sure to make the most of it!!! I hope you have the best
+            summer of your life. Congratssss once again bestie 🥳🩶. Love youuu
+            🩶🩶
+          </p>
+          <button id="unlock-year1-button" class="unlock-button">Unlock</button>
+        </div>
+      </div>
+      <div class="timeline-item in-progress year2">
+        <!-- Year 2 -->
+        <div class="timeline-item-content">
+          <h2>Year 2</h2>
+          <img src="3196775.png" alt="Year 2" />
+          <p>
+            HELLO BESTIE <br />
+            Okay before anything else… let me start with I’m sorry this is
+            coming late 😭 I DID plan on doing this but honestly I was so
+            confused about the dates like I genuinely didn’t even know exactly
+            when your second year ended and suddenly you were already in the
+            middle of third year and like we weren’t really able to talk
+            properly either but I guess better late than never right? Because
+            this is something you absolutely deserve to hear. You’ve completed
+            your second year of med. Read that again. Not just “passed exams” or
+            “got through it,” but survived, endured, and made it through another
+            whole year of something that was never easy for you to begin with.
+            2nd year isn’t exciting or new like first year (we both know even
+            the first year wasn’t exciting), it’s the year where things get
+            heavier, and exhaustion becomes normal. I know by now this degree
+            feels more like something you’re carrying than something you chose.
+            I know there are days where it feels endless, days where you
+            question everything, days where you’re just tired in ways that sleep
+            doesn’t fix. And yet, despite all of that, you don't stop. You keep
+            going quietly, without making noise, without asking for credit,
+            without complaining and that says so much about who you are What
+            people don’t see is how much strength it takes to keep going when
+            your heart isn’t fully in it. To do something for your parents. To
+            put responsibility before yourself. To keep choosing patience when
+            life feels unfair. And I know this year took a lot from you,
+            mentally, emotionally, physically. You missed home, you missed
+            comfort, you missed moments you can’t get back. And I know sometimes
+            you act like it’s fine, like it doesn’t matter, but it does. And you
+            matter. What makes me the proudest isn’t just that you finished
+            second year, it’s HOW you did it. You didn’t lose your kindness. You
+            didn’t become cold. You didn’t stop caring about the people around
+            you. Even while you were struggling, you were still checking in on
+            others, still being supportive, still being you. That’s rare. And
+            that’s something no degree, no exam, no title can ever take away
+            from you. I know you don’t really celebrate these things, and I know
+            part of you probably just wants to move on and not think about it
+            too much. But I want you to know that this is a big deal, whether
+            you acknowledge it or not. This degree is not easy. And doing it
+            while being away from home, and dealing with everything internally?
+            That’s strength. I’m so so so so soooo proud of you, more than words
+            can express. My prayers are always with you, and I pray that Allah
+            gives you ease in what’s ahead, peace in your heart, and happiness
+            beyond this chapter. Ameen. You’re not alone, bestie. Never have
+            been, never will be. Congratssss on completing your 2nd year!!!
+            <br />
+            Always here. Always proud. <br />
+            Love youuu 🩶🩶
+          </p>
+          <button id="unlock-year2-button" class="unlock-button">Unlock</button>
+        </div>
+      </div>
+      <div class="timeline-item in-progress year3">
+        <!-- Year 3 -->
+        <div class="timeline-item-content">
+          <h2>Year 3</h2>
+          <img src="R (1).png" alt="Year 3" />
+          <p>
+            Hello again bestie <br />
+            Year 3 now, it really hits different no? like things are not just
+            theoretical anymore. Hospitals, patients, long days, early mornings,
+            and coming home completely drained and still having to show up the
+            next day like nothing happened. This year asks a lot from you in
+            ways that are new and heavy. You have stepped into a space where you
+            are learning while doing. Watching, listening, understanding,
+            adapting all at once. That takes so much strength and focus and
+            patience. It is not easy to suddenly carry this level of
+            responsibility and still keep yourself together. And you fainting
+            today really worried me. Pls pls pls take care of yourself. This is
+            your body telling you that it needs rest and care. Being strong does
+            not mean ignoring yourself (I know you don't and we talked about
+            this today but here I am referring to not skipping meals). It means
+            protecting yourself too. You are doing something extremely demanding
+            and you deserve to be gentle with yourself. What I admire the most
+            is how you carry yourself. Even with all this stress you are still
+            kind, still respectful, still thoughtful. You have such a good heart
+            and such a calm presence. You handle things with so much grace even
+            when you are tired. That says everything about the kind of person
+            you are. Your family is truly blessed to have you, honestly. Your
+            parents raised someone so strong, so caring, and so genuine. You are
+            the kind of person people feel proud of without you even having to
+            say anything. And I hope you know how special that is. Pls pls pls
+            remember to eat properly, rest when you can, drink water and take
+            care of yourself. No hospital, no round, no exam is worth you
+            burning yourself out. Your health comes first always. You come
+            first. I am always here for you, as long as I can be, and anytime.
+            For anything. You are never alone in this. My prayers are always
+            with you and I pray Allah keeps you safe, healthy, and at ease
+            through this year Ameen. <br />
+            So proud of you. Keep going!! 🩶
+          </p>
+          <button id="unlock-year3-button" class="unlock-button">Unlock</button>
+        </div>
+      </div>
+      <div class="timeline-item in-progress year4">
+        <!-- Year 4 -->
+        <div class="timeline-item-content">
+          <h2>Year 4</h2>
+          <img src="pink_don.jpg" alt="Graduation" />
+          <p>
+            It's your penultimate year! Can you believe it you're almost there
+            now? Look how far you have come (I know you've already started
+            planning your way out once you get the degree) Anyway, what's better
+            than Pink donuts for motivation? Pink donuts with sprinkles '-'
+          </p>
+        </div>
+      </div>
+      <div class="timeline-item in-progress year5">
+        <!-- Year 5 -->
+        <div class="timeline-item-content">
+          <h2>Year 5</h2>
+          <img src="grad.jpg" alt="Year 5" />
+          <p>
+            Congratulations on reaching your final year! You're almost there.
+            Soon we will be seeing Dr. Chachi!!! Congratulations on reaching
+            your final year! You're almost there. Soon we will be seeing Dr.
+            Chachi!!! Congratulations on reaching your final year! You're almost
+            there. Soon we will be seeing Dr. Chachi!!!
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="scene" id="story-scene">
+      <div id="background" class="background background-1"></div>
+      <div class="character-container">
+        <div class="speech-bubble" id="speech-bubble">
+          <p id="speech-text"></p>
+        </div>
+        <div class="try">
+          <img src="fox.png" alt="Fox Character" class="fox" />
+        </div>
+      </div>
+      <button class="next-button" id="next-button">Next</button>
+    </div>
+
+    <script>
+      document
+        .getElementById('tbh-button')
+        .addEventListener('click', function () {
+          var tbhCard = document.getElementById('tbh-card');
+          tbhCard.style.display =
+            tbhCard.style.display === 'none' || tbhCard.style.display === ''
+              ? 'block'
+              : 'none';
+        });
+
+      var envelopes = document.getElementsByClassName('tbh-envelope');
+      for (var i = 0; i < envelopes.length; i++) {
+        envelopes[i].addEventListener('click', function () {
+          var message = this.nextElementSibling;
+          message.style.display =
+            message.style.display === 'none' || message.style.display === ''
+              ? 'block'
+              : 'none';
+        });
+      }
+
+      // Virtual Wish Jar
+      document.addEventListener('DOMContentLoaded', loadWishes);
+
+      function saveWish() {
+        var wishInput = document.getElementById('wish-input');
+        database.ref('wishes/').push({
+          wish: wishInput.value,
+        });
+        wishInput.value = '';
+      }
+
+      // Initialize Firebase
+      var firebaseConfig = {
+        apiKey: 'AIzaSyDRa8poszFaaBj2oxNxfj5uUc2e7xgluJw',
+        authDomain: 'birthday-73b01.firebaseapp.com',
+        databaseURL: 'https://birthday-73b01-default-rtdb.firebaseio.com',
+        projectId: 'birthday-73b01',
+        storageBucket: 'birthday-73b01.appspot.com',
+        messagingSenderId: '382163658307',
+        appId: '1:382163658307:web:a9f1da69e7173be95c96f6',
+        measurementId: 'G-W6TWMDSCML',
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      var database = firebase.database();
+      var auth = firebase.auth();
+
+      // Sign in anonymously
+      auth.signInAnonymously().catch(function (error) {
+        console.error('Anonymous sign-in error', error);
+      });
+
+      // Save wish to Firebase
+      function saveWish() {
+        var wishInput = document.getElementById('wish-input');
+        database.ref('wishes/').push({
+          wish: wishInput.value,
+        });
+        wishInput.value = '';
+      }
+
+      function appendWish(wish, key) {
+        var wishesDiv = document.getElementById('wishes');
+        var wishDiv = document.createElement('div');
+        wishDiv.classList.add('wish');
+        wishDiv.textContent = wish;
+
+        var deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = function () {
+          deleteWish(key);
+        };
+
+        wishDiv.appendChild(deleteButton);
+        wishesDiv.appendChild(wishDiv);
+      }
+
+      function deleteWish(key) {
+        var secretCode = 'duffer';
+        var userCode = prompt(
+          "Only chachi has access you can't delete now lol:",
+        );
+
+        if (userCode === secretCode) {
+          database
+            .ref('wishes/' + key)
+            .remove()
+            .then(function () {
+              console.log('Wish successfully deleted');
+            })
+            .catch(function (error) {
+              console.log(
+                "Ae shurli de kam check karo, too late now you can't delete ",
+                error,
+              );
+            });
+        } else {
+          alert("Ae shurli de kam check karo, too late now you can't delete.");
+        }
+      }
+
+      function loadWishes() {
+        var wishesDiv = document.getElementById('wishes');
+        database.ref('wishes/').on('value', function (snapshot) {
+          wishesDiv.innerHTML = ''; // Clear existing wishes
+          snapshot.forEach(function (childSnapshot) {
+            var wish = childSnapshot.val().wish;
+            var key = childSnapshot.key;
+            appendWish(wish, key);
+          });
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        var items = document.querySelectorAll('.timeline-item');
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+                if (entry.target.classList.contains('completed')) {
+                  entry.target.querySelector(
+                    '.timeline-item-content',
+                  ).style.backgroundColor = '#FFD1DC';
+                }
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.9 },
+        );
+
+        items.forEach(function (item) {
+          observer.observe(item);
+        });
+      });
+
+      // Unlock functions for each year
+      function unlockYear1() {
+        var secretCode = 'Neend';
+        var userCode = prompt('Enter the code:');
+
+        if (userCode === secretCode) {
+          var year1Content = document.querySelector(
+            '.timeline-item-content.year1',
+          );
+          year1Content.classList.add('unlocked');
+          document.getElementById('unlock-year1-button').style.display = 'none';
+        } else {
+          alert('Incorrect code. Please try again.');
+        }
+      }
+
+      function unlockYear2() {
+        var secretCode = 'Bhook'; // Change this to your desired password
+        var userCode = prompt('Enter the code:');
+
+        if (userCode === secretCode) {
+          var year2Content = document.querySelector(
+            '.year2 .timeline-item-content',
+          );
+          year2Content.classList.add('unlocked');
+          document.getElementById('unlock-year2-button').style.display = 'none';
+        } else {
+          alert('Incorrect code. Please try again.');
+        }
+      }
+
+      function unlockYear3() {
+        var secretCode = 'Redbull'; // Change this to your desired password
+        var userCode = prompt('Enter the code:');
+
+        if (userCode === secretCode) {
+          var year3Content = document.querySelector(
+            '.year3 .timeline-item-content',
+          );
+          year3Content.classList.add('unlocked');
+          document.getElementById('unlock-year3-button').style.display = 'none';
+        } else {
+          alert('Incorrect code. Please try again.');
+        }
+      }
+
+      function unlockYear4() {
+        var secretCode = 'YourPasswordHere'; // Change this to your desired password
+        var userCode = prompt('Enter the code:');
+
+        if (userCode === secretCode) {
+          var year4Content = document.querySelector(
+            '.year4 .timeline-item-content',
+          );
+          year4Content.classList.add('unlocked');
+          document.getElementById('unlock-year4-button').style.display = 'none';
+        } else {
+          alert('Incorrect code. Please try again.');
+        }
+      }
+
+      function unlockYear5() {
+        var secretCode = 'YourPasswordHere'; // Change this to your desired password
+        var userCode = prompt('Enter the code:');
+
+        if (userCode === secretCode) {
+          var year5Content = document.querySelector(
+            '.year5 .timeline-item-content',
+          );
+          year5Content.classList.add('unlocked');
+          document.getElementById('unlock-year5-button').style.display = 'none';
+        } else {
+          alert('Incorrect code. Please try again.');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // Add event listeners for all unlock buttons
+        var unlockButtons = {
+          'unlock-year1-button': unlockYear1,
+          'unlock-year2-button': unlockYear2,
+          'unlock-year3-button': unlockYear3,
+          'unlock-year4-button': unlockYear4,
+          'unlock-year5-button': unlockYear5,
+        };
+
+        for (var buttonId in unlockButtons) {
+          var button = document.getElementById(buttonId);
+          if (button) {
+            button.addEventListener('click', unlockButtons[buttonId]);
+          }
+        }
+
+        var items = document.querySelectorAll('.timeline-item');
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+                if (entry.target.classList.contains('completed')) {
+                  entry.target.querySelector(
+                    '.timeline-item-content',
+                  ).style.backgroundColor = '#FFD1DC';
+                }
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.9 },
+        );
+
+        items.forEach(function (item) {
+          observer.observe(item);
+        });
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <script>
+      window.onload = function () {
+        var duration = 5 * 900;
+        var end = Date.now() + duration;
+
+        (function frame() {
+          confetti({
+            particleCount: 7,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+          });
+          confetti({
+            particleCount: 7,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+          });
+
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        })();
+      };
+    </script>
+
+    <script>
+      var firebaseConfig = {
+        databaseURL: 'https://birthday-73b01-default-rtdb.firebaseio.com/',
+      };
+      firebase.initializeApp(firebaseConfig);
+      var database = firebase.database();
+    </script>
+    <script>
+      const scenes = [
+        {
+          text: 'Oh hey there 👋🏻 you made it here!',
+          background: 'background-1',
+        },
+        {
+          text: 'HAPPY BIRTHDAY!!!!!!!!',
+          background: 'background-2',
+        },
+        {
+          text: 'HAPPY',
+          background: 'background-3',
+        },
+        {
+          text: 'BIRTHDAY!!!',
+          background: 'background-3',
+        },
+
+        {
+          text: '🥳🥳🥳',
+          background: 'background-2',
+        },
+        {
+          text: 'YOUR BESTIE TOLD ME',
+          background: 'background-2',
+        },
+        {
+          text: 'YOU TURNED 21 TODAY.',
+          background: 'background-2',
+        },
+        {
+          text: 'WOAHHHHHH',
+          background: 'background-3',
+        },
+
+        {
+          text: 'I AM SO HAPPY FOR YOU',
+          background: 'background-3',
+        },
+
+        {
+          text: "Well you might be thinking that we don't even know each other",
+          background: 'background-2',
+        },
+        {
+          text: "And that's true 😔",
+          background: 'background-1',
+        },
+        {
+          text: 'But that does not mean that I CANT WISH YOU!!',
+          background: 'background-2',
+        },
+        {
+          text: "In fact that's exactly why I am here 😔",
+          background: 'background-3',
+        },
+
+        {
+          text: 'Your friend put me here to wish you!',
+          background: 'background-3',
+        },
+        {
+          text: 'I told him to place me on top of the website',
+          background: 'background-1',
+        },
+        {
+          text: 'He instead',
+          background: 'background-2',
+        },
+        {
+          text: 'Trapped me inside this circle and I am just bouncing now',
+          background: 'background-3',
+        },
+        {
+          text: 'THAT TOO AT THE BOTTOM',
+          background: 'background-3',
+        },
+        {
+          text: 'AT THE VERY END',
+          background: 'background-3',
+        },
+        {
+          text: 'Idiot',
+          background: 'background-3',
+        },
+        {
+          text: 'Trust me it sucks in here',
+          background: 'background-1',
+        },
+        {
+          text: 'The happy smile that you see is fake.',
+          background: 'background-2',
+        },
+        {
+          text: 'ANYWAY',
+          background: 'background-3',
+        },
+        {
+          text: "I won't waste much of your time",
+          background: 'background-1',
+        },
+        {
+          text: 'I have a few messages your friend wanted me to share with you!!!',
+          background: 'background-2',
+        },
+        {
+          text: '1: Never forget how many people’s lives you’ve touched. You’re a gift to everyone who knows you, and today, we’re celebrating YOU, Happy Birthday Bestie!',
+          background: 'background-3',
+        },
+        {
+          text: '2: On your birthday, I just want you to know. You’re loved, you’re appreciated, and you make everything so much better just by being there.',
+          background: 'background-3',
+        },
+        {
+          text: '3: You’re not just another year older—you’re another year better, cooler, stronger, and even more amazing (if that’s even possible).',
+          background: 'background-3',
+        },
+        {
+          text: '4: Your friendship means the world to me. I hope this birthday is as memorable as the countless amazing memories we’ve shared together in the past two years.',
+          background: 'background-3',
+        },
+        {
+          text: "5: If friendship were a gift, you’d be the most precious one of all. I’m so grateful for you and for everything that you've done for me.",
+          background: 'background-3',
+        },
+        {
+          text: '6: You deserve the best, not just today, but every single day. Cause someone as amazing as you deserves nothing less.',
+          background: 'background-3',
+        },
+        {
+          text: "7: You’re a gift to everyone who knows you. You're a blessing. Thank you for being a constant source of support, strength, and inspiration, and for always being there for me, no matter what.",
+          background: 'background-3',
+        },
+        {
+          text: '8: Thank you for being you. Thank you for your love, your care, and your endless support.',
+          background: 'background-3',
+        },
+        {
+          text: '9: If I could gift you something, it would be the ability to see yourself through my eyes, cause then you’d know how truly special and amazing you are.',
+          background: 'background-3',
+        },
+
+        {
+          text: "10: In these 2 years of our friendship, your presence has always been like Apricity - The warmth of the sun in winter. You've always been there for me with kind words no matter what. You've brought light, comfort, and, a sense of peace especially during the most challenging moments.",
+          background: 'background-3',
+        },
+        {
+          text: 'Happy Birthday Bestie!. I hope this year brings you endless love, happiness, and everything that you’ve been praying for. Love you 🤍🤍🤍',
+        },
+
+        {
+          text: 'I hope you liked it!!! but wait',
+          background: 'background-3',
+        },
+        {
+          text: "That's not it",
+          background: 'background-3',
+        },
+        {
+          text: 'My friend molang will share the rest of your gift!!!',
+          background: 'background-3',
+        },
+        {
+          text: "And i can't wait for you to see it!",
+          background: 'background-3',
+        },
+        {
+          text: "Just click on next and I'll take you there!",
+          background: 'background-3',
+        },
+        {
+          text: 'Oh and HAPPY BIRTHDAY!',
+          background: 'background-3',
+        },
+      ];
+      const speechBubble = document.getElementById('speech-bubble');
+      const speechText = document.getElementById('speech-text');
+      const nextButton = document.getElementById('next-button');
+      const storyScene = document.getElementById('story-scene');
+      const wishingTree = document.getElementById('wishing-tree');
+      const finalMessage = document.getElementById('final-message');
+      const background = document.getElementById('background');
+
+      let currentScene = 0;
+      let isTyping = false;
+
+      function typeText(text) {
+        return new Promise((resolve) => {
+          let index = 0;
+          isTyping = true;
+          speechText.textContent = '';
+
+          function type() {
+            if (index < text.length) {
+              speechText.textContent += text[index];
+              index++;
+              setTimeout(type, 73);
+            } else {
+              isTyping = false;
+              resolve();
+            }
+          }
+
+          type();
+        });
+      }
+
+      async function nextScene() {
+        if (isTyping) return;
+
+        if (currentScene < scenes.length - 1) {
+          speechBubble.classList.remove('visible');
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          background.className = `background ${scenes[currentScene].background}`;
+          speechBubble.classList.add('visible');
+          await typeText(scenes[currentScene].text);
+
+          currentScene++;
+        } else if (currentScene === scenes.length - 1) {
+          speechBubble.classList.remove('visible');
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          background.className = `background ${scenes[currentScene].background}`;
+          speechBubble.classList.add('visible');
+          await typeText(scenes[currentScene].text);
+
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+
+          window.location.href = 'https://molang-bday-wish.vercel.app';
+
+          currentScene++;
+        }
+      }
+
+      nextButton.addEventListener('click', nextScene);
+
+      window.onload = () => {
+        speechBubble.classList.add('visible');
+        nextScene();
+      };
+    </script>
+    <canvas id="confettiCanvas"></canvas>
+
+    <canvas id="confettiCanvas"></canvas>
+
+    <script>
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const confetti = [];
+      const confettiColors = [
+        '#FFC0CB',
+        '#FF69B4',
+        '#FFB6C1',
+        '#FF1493',
+        '#DB7093',
+      ]; // Shades of pink
+
+      const confettiDuration = 5000; // Confetti duration in milliseconds
+      const fadeOutDuration = 2000; // Fade-out duration in milliseconds
+      let animationStartTime = null;
+
+      // Create confetti pieces
+      for (let i = 0; i < 150; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 10 + 5,
+          color:
+            confettiColors[Math.floor(Math.random() * confettiColors.length)],
+          speedX: Math.random() * 2 - 1,
+          speedY: Math.random() * 3 + 1,
+          rotation: Math.random() * 360,
+          rotationSpeed: Math.random() * 5,
+          opacity: 1,
+        });
+      }
+
+      // Draw and update confetti
+      function drawConfetti(timestamp) {
+        if (!animationStartTime) animationStartTime = timestamp;
+        const elapsedTime = timestamp - animationStartTime;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        confetti.forEach((piece) => {
+          ctx.save();
+          ctx.translate(piece.x, piece.y);
+          ctx.rotate((piece.rotation * Math.PI) / 180);
+          ctx.fillStyle = `rgba(${hexToRgb(piece.color)}, ${piece.opacity})`;
+          ctx.fillRect(
+            -piece.size / 2,
+            -piece.size / 2,
+            piece.size,
+            piece.size,
+          );
+          ctx.restore();
+
+          piece.x += piece.speedX;
+          piece.y += piece.speedY;
+          piece.rotation += piece.rotationSpeed;
+
+          // Reduce opacity for fade-out effect
+          if (elapsedTime > confettiDuration) {
+            piece.opacity -= 1 / (fadeOutDuration / 16); // Assuming 60 fps
+            if (piece.opacity < 0) piece.opacity = 0;
+          }
+
+          // Reset confetti position if it goes off-screen
+          if (piece.y > canvas.height) {
+            piece.y = -piece.size;
+            piece.x = Math.random() * canvas.width;
+          }
+        });
+
+        // Stop animation after fade-out duration
+        if (elapsedTime < confettiDuration + fadeOutDuration) {
+          requestAnimationFrame(drawConfetti);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      // Utility function to convert hex color to RGB
+      function hexToRgb(hex) {
+        const bigint = parseInt(hex.slice(1), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `${r}, ${g}, ${b}`;
+      }
+
+      // Start animation
+      requestAnimationFrame(drawConfetti);
+
+      // Adjust canvas size on window resize
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    </script>
+  </body>
 </html>
