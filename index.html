@@ -314,7 +314,6 @@
       .scene {
         position: relative;
         width: 100%;
-        min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -333,6 +332,7 @@
         justify-content: center;
         padding: 0 20px;
         box-sizing: border-box;
+        margin-top: 2px;
       }
 
       .try {
@@ -1142,7 +1142,19 @@
     <script>
       const scenes = [
         {
-          text: 'Oh hey there 👋🏻 you made it here!',
+          text: 'Oh hey there 👋🏻  you made it here!',
+          background: 'background-1',
+        },
+        {
+          text: 'Wait... have we met before? 🤔',
+          background: 'background-2',
+        },
+        {
+          text: 'OH YES! You were here last year!',
+          background: 'background-3',
+        },
+        {
+          text: "It's your 22nd birthday now!!!",
           background: 'background-1',
         },
         {
@@ -1157,29 +1169,35 @@
           text: 'BIRTHDAY!!!',
           background: 'background-3',
         },
-
         {
           text: '🥳🥳🥳',
           background: 'background-2',
+        },
+        {
+          text: 'Your friend did something a little different this time...',
+          background: 'background-1',
+        },
+        {
+          text: 'Click "Show" to see what it is, or "Skip" to continue with the messages!',
+          background: 'background-2',
+          showButtons: true,
         },
         {
           text: 'YOUR BESTIE TOLD ME',
           background: 'background-2',
         },
         {
-          text: 'YOU TURNED 21 TODAY.',
+          text: 'YOU TURNED 22 TODAY.',
           background: 'background-2',
         },
         {
           text: 'WOAHHHHHH',
           background: 'background-3',
         },
-
         {
           text: 'I AM SO HAPPY FOR YOU',
           background: 'background-3',
         },
-
         {
           text: "Well you might be thinking that we don't even know each other",
           background: 'background-2',
@@ -1196,7 +1214,6 @@
           text: "In fact that's exactly why I am here 😔",
           background: 'background-3',
         },
-
         {
           text: 'Your friend put me here to wish you!',
           background: 'background-3',
@@ -1246,23 +1263,23 @@
           background: 'background-2',
         },
         {
-          text: '1: Never forget how many people’s lives you’ve touched. You’re a gift to everyone who knows you, and today, we’re celebrating YOU, Happy Birthday Bestie!',
+          text: "1: Never forget how many people's lives you've touched. You're a gift to everyone who knows you, and today, we're celebrating YOU, Happy Birthday Bestie!",
           background: 'background-3',
         },
         {
-          text: '2: On your birthday, I just want you to know. You’re loved, you’re appreciated, and you make everything so much better just by being there.',
+          text: "2: On your birthday, I just want you to know. You're loved, you're appreciated, and you make everything so much better just by being there.",
           background: 'background-3',
         },
         {
-          text: '3: You’re not just another year older—you’re another year better, cooler, stronger, and even more amazing (if that’s even possible).',
+          text: "3: You're not just another year older—you're another year better, cooler, stronger, and even more amazing (if that's even possible).",
           background: 'background-3',
         },
         {
-          text: '4: Your friendship means the world to me. I hope this birthday is as memorable as the countless amazing memories we’ve shared together in the past two years.',
+          text: "4: Your friendship means the world to me. I hope this birthday is as memorable as the countless amazing memories we've shared together in the past two years.",
           background: 'background-3',
         },
         {
-          text: "5: If friendship were a gift, you’d be the most precious one of all. I’m so grateful for you and for everything that you've done for me.",
+          text: "5: If friendship were a gift, you'd be the most precious one of all. I'm so grateful for you and for everything that you've done for me.",
           background: 'background-3',
         },
         {
@@ -1270,7 +1287,7 @@
           background: 'background-3',
         },
         {
-          text: "7: You’re a gift to everyone who knows you. You're a blessing. Thank you for being a constant source of support, strength, and inspiration, and for always being there for me, no matter what.",
+          text: "7: You're a gift to everyone who knows you. You're a blessing. Thank you for being a constant source of support, strength, and inspiration, and for always being there for me, no matter what.",
           background: 'background-3',
         },
         {
@@ -1278,18 +1295,17 @@
           background: 'background-3',
         },
         {
-          text: '9: If I could gift you something, it would be the ability to see yourself through my eyes, cause then you’d know how truly special and amazing you are.',
+          text: "9: If I could gift you something, it would be the ability to see yourself through my eyes, cause then you'd know how truly special and amazing you are.",
           background: 'background-3',
         },
-
         {
           text: "10: In these 2 years of our friendship, your presence has always been like Apricity - The warmth of the sun in winter. You've always been there for me with kind words no matter what. You've brought light, comfort, and, a sense of peace especially during the most challenging moments.",
           background: 'background-3',
         },
         {
-          text: 'Happy Birthday Bestie!. I hope this year brings you endless love, happiness, and everything that you’ve been praying for. Love you 🤍🤍🤍',
+          text: "Happy Birthday Bestie!. I hope this year brings you endless love, happiness, and everything that you've been praying for. Love you 🤍🤍🤍",
+          background: 'background-3',
         },
-
         {
           text: 'I hope you liked it!!! but wait',
           background: 'background-3',
@@ -1349,6 +1365,47 @@
 
       async function nextScene() {
         if (isTyping) return;
+
+        // Handle the special scene with Show/Skip buttons
+        if (scenes[currentScene].showButtons) {
+          speechBubble.classList.remove('visible');
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          background.className = `background ${scenes[currentScene].background}`;
+          speechBubble.classList.add('visible');
+          await typeText(scenes[currentScene].text);
+
+          // Hide the Next button and show Show/Skip buttons
+          nextButton.style.display = 'none';
+
+          // Create Show and Skip buttons
+          const buttonContainer = document.createElement('div');
+          buttonContainer.style.cssText =
+            'display: flex; gap: 15px; margin-top: 20px; justify-content: center;';
+
+          const showButton = document.createElement('button');
+          showButton.textContent = 'Show';
+          showButton.className = 'next-button';
+          showButton.onclick = () => {
+            window.location.href = 'https://hussie95.github.io/bday-2';
+          };
+
+          const skipButton = document.createElement('button');
+          skipButton.textContent = 'Skip';
+          skipButton.className = 'next-button';
+          skipButton.onclick = () => {
+            buttonContainer.remove();
+            nextButton.style.display = 'block';
+            currentScene++;
+            nextScene();
+          };
+
+          buttonContainer.appendChild(showButton);
+          buttonContainer.appendChild(skipButton);
+          nextButton.parentElement.appendChild(buttonContainer);
+
+          return;
+        }
 
         if (currentScene < scenes.length - 1) {
           speechBubble.classList.remove('visible');
